@@ -1,0 +1,17 @@
+*.o
+.o
+*~
+test
+count
+1_minute_left_lane/processed_frames
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon
