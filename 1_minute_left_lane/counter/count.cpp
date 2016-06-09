@@ -13,7 +13,7 @@ int main( int argc, char** argv )
 
 	int image_index = 2600;
 	char image_file[100];
-	sprintf(image_file, "../1_minute_left_lane/frame0%d.jpeg", image_index);
+	sprintf(image_file, "../raw_frames/frame0%d.jpeg", image_index);
 	image = imread(image_file, CV_LOAD_IMAGE_COLOR);
 
 	cv::Mat image_mat(image);
@@ -26,7 +26,7 @@ int main( int argc, char** argv )
 
 
 	// Read bounding box data
-	ifstream bbox_file("car_boxes.txt");
+	ifstream bbox_file("../bbox_files/car_boxes.txt");
 	string line;
 
 
@@ -67,18 +67,4 @@ int main( int argc, char** argv )
 
 	waitKey(0);                                          // Wait for a keystroke in the window
 	return 0;
-
-// // You mention that you start with a CVMat* imagesource
-// CVMat * imagesource;
-
-// // Transform it into the C++ cv::Mat format
-// cv::Mat image(imagesource);
-
-// // Setup a rectangle to define your region of interest
-// cv::Rect myROI(10, 10, 100, 100);
-
-// // Crop the full image to that image contained by the rectangle myROI
-// // Note that this doesn't copy the data
-// cv::Mat croppedImage = image(myROI);
-
 }
