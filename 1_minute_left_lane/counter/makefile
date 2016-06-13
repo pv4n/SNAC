@@ -17,23 +17,31 @@ CPPFLAGS	= `pkg-config --cflags opencv` \
 				-g \
 				-o
 
-LIBS		= `pkg-config --libs opencv` -lm `pkg-config --libs opencv gtk+-2.0`
+LIBS		= `pkg-config --libs opencv` \
+				`pkg-config --libs opencv gtk+-2.0` \
+				-lm
 
 COMPILEC	= $(CC) $(CFLAGS)
 COMPILECPP	= $(CPPC) $(CPPFLAGS)
 
-OBJECTS		= count.o imgfeatures.o utils.o sift.o kdtree.o minpq.o xform.o
+OBJECTS		= count.o \
+				imgfeatures.o \
+				kdtree.o \
+				minpq.o \
+				sift.o \
+				utils.o \
+				xform.o
 
 all: $(OBJECTS) count
 
 count: $(OBJECTS)
 	$(COMPILECPP) $@ $^ $(LIBS)
 
-%.o: %.cpp
-	$(COMPILECPP) $@ -c $<
-
 %.o: %.c
 	$(COMPILEC) $@ -c $<
+
+%.o: %.cpp
+	$(COMPILECPP) $@ -c $<
 
 clean:
 	rm -rfv *.o count
