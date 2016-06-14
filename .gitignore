@@ -9,6 +9,8 @@ data/1_minute_light_traffic/raw_frames
 data/1_minute_medium_traffic/counted_frames
 data/1_minute_medium_traffic/processed_frames
 data/1_minute_medium_traffic/raw_frames
+data/speed_tracking/processed_frames
+data/speed_tracking/raw_frames
 
 .DS_Store
 .AppleDouble
