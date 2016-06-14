@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 	// int final_index = END_FRAME;
 
 	// Read bounding box data
-	ifstream bbox_file("../bbox_files_medium/car.txt");
+	ifstream bbox_file("../data/1_minute_medium_traffic/car.txt");
 
 	// Vector of vectors of vectors for bbox data
 	vector<vector<vector<float>>> bboxes(END_FRAME - START_FRAME);
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 	for (long int f=START_FRAME+1; f<END_FRAME; f++)
 	{
 		char image_file_zero[100];
-		sprintf(image_file_zero, "../raw_frames_medium/frame%ld.jpeg", f-1);
+		sprintf(image_file_zero, "../data/1_minute_medium_traffic/raw_frames/frame%ld.jpeg", f-1);
 
 		printf("%s\n", image_file_zero);
 		Mat image_zero = imread(image_file_zero, CV_LOAD_IMAGE_COLOR);
@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 
 
 		char image_file_one[100];
-		sprintf(image_file_one, "../raw_frames_medium/frame%ld.jpeg", f);
+		sprintf(image_file_one, "../data/1_minute_medium_traffic/raw_frames/frame%ld.jpeg", f);
 		Mat image_one = imread(image_file_one, CV_LOAD_IMAGE_COLOR);
 
 		if(bboxes[f-START_FRAME].empty())
@@ -218,8 +218,8 @@ int main(int argc, char** argv)
 
 				char image_file_processed[100];
 				char image_file_processed_new[100];
-				sprintf(image_file_processed, "../processed_frames_medium/frame%ld.jpeg_p.png", f);
-				sprintf(image_file_processed_new, "../processed_frames_medium_counted/frame%ld.jpeg_p.png", f);
+				sprintf(image_file_processed, "../data/1_minute_medium_traffic/processed_frames/frame%ld.jpeg_p.png", f);
+				sprintf(image_file_processed_new, "../data/1_minute_medium_traffic/counted_frames/frame%ld.jpeg_p.png", f);
 				Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 				putText(image_processed, to_string(car_count), cvPoint(bboxes[f-START_FRAME][0][2], bboxes[f-START_FRAME][0][3]), FONT_HERSHEY_SIMPLEX, 2, cvScalar(0, 0, 255), 5, CV_AA);
 

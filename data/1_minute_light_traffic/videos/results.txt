@@ -1,0 +1,19 @@
+1_minute_light_traffic
+
+17 cars only in the leftmost lane
+57 total cars in all lanes
+
+50 cars counted total
+
+2 false positives
+3 trucks
+
+45 / 57
+
+14 missed
+
+79% cars detected
+82% detection (cars + trucks)
+25% missed
+4% false positive
+9% false positive (with trucks)
