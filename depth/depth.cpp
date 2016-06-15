@@ -28,13 +28,13 @@ extern "C"
 #define XMAX_THRES 640
 #define YMAX_THRES 650
 
-#define START_FRAME 33500
-#define END_FRAME 35298
+#define START_FRAME 192
+#define END_FRAME 315
 
-#define BBOX_FILE "../data/1_minute_medium_traffic/car.txt"
-#define RAW_FRAMES_LOCATION "../data/1_minute_medium_traffic/raw_frames"
-#define PROCESSED_FRAMES_LOCATION "../data/1_minute_medium_traffic/processed_frames"
-#define COUNTED_FRAMES_LOCATION "../data/1_minute_medium_traffic/counted_frames"
+#define BBOX_FILE "../data/speed_tracking/bbox_files/car_45.txt"
+#define RAW_FRAMES_LOCATION "../data/speed_tracking/raw_frames/45"
+#define PROCESSED_FRAMES_LOCATION "../data/speed_tracking/processed_frames/45"
+#define COUNTED_FRAMES_LOCATION "../data/speed_tracking/counted_frames/45"
 
 using namespace cv;
 using namespace std;
@@ -119,37 +119,41 @@ int main(int argc, char** argv)
 	for (long int f=START_FRAME+1; f<END_FRAME; f++)
 	{
 		char image_file_zero[100];
-		sprintf(image_file_zero, RAW_FRAMES_LOCATION"/frame%5ld.jpeg", f-1);
+		sprintf(image_file_zero, RAW_FRAMES_LOCATION"/frame%05ld.jpeg", f-1);
 
-		printf("%s\n", image_file_zero);
+		printf("hey%s\n", image_file_zero);
 		Mat image_zero = imread(image_file_zero, CV_LOAD_IMAGE_COLOR);
 
-		if(bboxes[f-START_FRAME-1].empty())
+		imshow("test", image_zero);
+		cvWaitKey(0);
+
+		if(bboxes[START_FRAME-1].empty())
 		{
 			continue;
 		}
-		cv::Rect bound_box_zero(bboxes[f-START_FRAME-1][0][0],
-								bboxes[f-START_FRAME-1][0][1],
-								bboxes[f-START_FRAME-1][0][2] - bboxes[f-START_FRAME-1][0][0],
-								bboxes[f-START_FRAME-1][0][3] - bboxes[f-START_FRAME-1][0][1]);
+		cv::Rect bound_box_zero(bboxes[START_FRAME-1][0][0],
+								bboxes[START_FRAME-1][0][1],
+								bboxes[START_FRAME-1][0][2] - bboxes[START_FRAME-1][0][0],
+								bboxes[START_FRAME-1][0][3] - bboxes[START_FRAME-1][0][1]);
 		cv::Mat cropped_zero = image_zero(bound_box_zero);
 		IplImage img1_image = cropped_zero;
 		IplImage* img1 = &img1_image;
 
+		puts("here\n");
 
 
 		char image_file_one[100];
-		sprintf(image_file_one, RAW_FRAMES_LOCATION"/raw_frames/frame%5ld.jpeg", f);
+		sprintf(image_file_one, RAW_FRAMES_LOCATION"/raw_frames/frame%05ld.jpeg", f);
 		Mat image_one = imread(image_file_one, CV_LOAD_IMAGE_COLOR);
 
-		if(bboxes[f-START_FRAME].empty())
+		if(bboxes[START_FRAME].empty())
 		{
 			continue;
 		}
-		cv::Rect bound_box_one(bboxes[f-START_FRAME][0][0],
-								bboxes[f-START_FRAME][0][1],
-								bboxes[f-START_FRAME][0][2] - bboxes[f-START_FRAME][0][0],
-								bboxes[f-START_FRAME][0][3] - bboxes[f-START_FRAME][0][1]);
+		cv::Rect bound_box_one(bboxes[START_FRAME][0][0],
+								bboxes[START_FRAME][0][1],
+								bboxes[START_FRAME][0][2] - bboxes[START_FRAME][0][0],
+								bboxes[START_FRAME][0][3] - bboxes[START_FRAME][0][1]);
 		cv::Mat cropped_one = image_one(bound_box_one);
 		IplImage img2_image = cropped_one;
 		IplImage* img2 = &img2_image;
@@ -223,8 +227,8 @@ int main(int argc, char** argv)
 
 				char image_file_processed[100];
 				char image_file_processed_new[100];
-				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
-				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%05ld.jpeg_p.png", f);
+				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%05ld.jpeg_p.png", f);
 				Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 				putText(image_processed, to_string(car_count), cvPoint(bboxes[f-START_FRAME][0][2], bboxes[f-START_FRAME][0][3]), FONT_HERSHEY_SIMPLEX, 2, cvScalar(0, 0, 255), 5, CV_AA);
 
