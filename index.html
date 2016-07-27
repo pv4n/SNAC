@@ -49,14 +49,14 @@
 <li>Detection of obstacles (cars stopped on the road, accidents, major potholes, etc.)</li>
 </ul>
 
-<p>space</p>
-
 <p><br> </p>
 
 <h3>
 <a id="the-system" class="anchor" href="#the-system" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The system</h3>
 
-<p>"Picture of in car assembly" test1432</p>
+<p>This is the in car assembly of the SNAC system:</p>
+
+<p><img src="http://www.bloomberg.com/features/2015-george-hotz-self-driving-car/img/feat_hotz52__06.jpg" align="center"></p>
 
 <p>Sensors:</p>
 
@@ -78,26 +78,36 @@
   </tr>
 </table>
 
-<p>here</p>
+<p><br> </p>
 
-<p><a href="https://www.youtube.com/watch?v=N0Hz0SWtQ0w"><img src="https://img.youtube.com/vi/N0Hz0SWtQ0w/0.jpg" alt="SNAC Video"></a>
-blahfddfa</p>
+<h3>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h3>
+
+<p><a href="https://www.youtube.com/watch?v=N0Hz0SWtQ0w"><img src="https://img.youtube.com/vi/N0Hz0SWtQ0w/0.jpg" alt="SNAC Video"></a></p>
+
+<p><br> </p>
 
 <h3>
 <a id="methods" class="anchor" href="#methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Methods</h3>
 
-<p><img src="http://i.imgur.com/bEm7A89.jpg" alt="System workflow">
-opencv optical flow (farneback)
-neural network - trained yolo (reference paper and site) architecture on VOC car images. this gives bounding boxes
-bounding box metadata is enough to be able to count how many opposing cars pass by.
-with the culmination of optical flow and bounding box data, a logistic classifier predicts the speed of the vehicle.
-finally greenshield's eq, which requires the count and speeds, outputs a traffic estimate.</p>
+<p><img src="http://i.imgur.com/bEm7A89.jpg" alt="System workflow"></p>
+
+<ul>
+<li>opencv optical flow (farneback)</li>
+<li>neural network - trained yolo (reference paper and site) architecture on VOC car images. this gives bounding boxes</li>
+<li>bounding box metadata is enough to be able to count how many opposing cars pass by.</li>
+<li>with the culmination of optical flow and bounding box data, a logistic classifier predicts the speed of the vehicle.</li>
+<li>finally greenshield's eq, which requires the count and speeds, outputs a traffic estimate.</li>
+</ul>
 
 <h3>
 <a id="authors" class="anchor" href="#authors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h3>
 
 <p>Ajay Srivastava and Pavan Purohit
 {as1877, pp428}@rutgers.edu</p>
+
+<p>Working under the supervision of PhD student Gorkem Kar &amp; Professor Marco Gruteser
+{gkar87, gruteser}@winlab.rutgers.edu</p>
       </section>
     </div>
 
