@@ -36,31 +36,39 @@
 <img border="0" alt="SNAC Demo" src="https://img.youtube.com/vi/N0Hz0SWtQ0w/0.jpg" align="center">
 </a>
 <br>
+</p>
 
-SNAC is a system designed for use in the next generation of autonomous cars. Currently, it is capable of the following:
-* Counting the number of cars in opposing traffic 
-* Speed estimation of cars in opposing traffic 
-* Logging GPS and any OBD data
+<p>SNAC is a system designed for use in the next generation of autonomous cars. Currently, it is capable of the following:</p>
 
-Utilizing this information, it is capable of traffic estimation, primarily using monocular vision. When combined with a wireless communication network, in theory, it will be able to generate crowdsourced traffic information.
+<ul>
+<li>Counting the number of cars in opposing traffic </li>
+<li>Speed estimation of cars in opposing traffic </li>
+<li>Logging GPS and any OBD data</li>
+</ul>
 
-Some features to be implemented in the future:
-* Mapping capability to geographically store data
-* Robust detection of various traffic signs (stop signs, yield signs, speed limit signs, etc.) 
-* Detection of obstacles (cars stopped on the road, accidents, major potholes, etc.)
+<p>Utilizing this information, it is capable of traffic estimation, primarily using monocular vision. When combined with a wireless communication network, in theory, it will be able to generate crowdsourced traffic information.</p>
 
-<br>
-<br>
+<p>Some features to be implemented in the future:</p>
 
-# The system
+<ul>
+<li>Mapping capability to geographically store data</li>
+<li>Robust detection of various traffic signs (stop signs, yield signs, speed limit signs, etc.) </li>
+<li>Detection of obstacles (cars stopped on the road, accidents, major potholes, etc.)</li>
+</ul>
 
-This is the in car assembly of the SNAC system:
+<p><br>
+<br></p>
 
-<img src="http://www.bloomberg.com/features/2015-george-hotz-self-driving-car/img/feat_hotz52__06.jpg" align="center">  
+<h1>
+<a id="the-system" class="anchor" href="#the-system" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The system</h1>
 
-Sensors:
+<p>This is the in car assembly of the SNAC system:</p>
 
-</p><table>
+<p><img src="http://www.bloomberg.com/features/2015-george-hotz-self-driving-car/img/feat_hotz52__06.jpg" align="center">  </p>
+
+<p>Sensors:</p>
+
+<table>
   <tr>
     <td width="80%">1 x <a href="https://www.leopardimaging.com/LI-USB30-OV10635.html">Omnivision OV10635 USB 3.0 Camera</a>
 </td>
@@ -78,25 +86,29 @@ Sensors:
   </tr>
 </table>
 
-<br>
-<br>
+<p><br>
+<br></p>
 
-# Methods
-![System workflow](http://i.imgur.com/KnY3Xta.jpg)
+<h1>
+<a id="methods" class="anchor" href="#methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Methods</h1>
 
-* opencv optical flow (farneback)
-* neural network - trained yolo (reference paper and site) architecture on VOC car images. this gives bounding boxes
-* bounding box metadata is enough to be able to count how many opposing cars pass by.
-* with the culmination of optical flow and bounding box data, a logistic classifier predicts the speed of the vehicle.
-* finally greenshield's eq, which requires the count and speeds, outputs a traffic estimate.
+<p><img src="http://i.imgur.com/KnY3Xta.jpg" alt="System workflow"></p>
 
-<br>
-<br>
+<ul>
+<li>opencv optical flow (farneback)</li>
+<li>neural network - trained yolo (reference paper and site) architecture on VOC car images. this gives bounding boxes</li>
+<li>bounding box metadata is enough to be able to count how many opposing cars pass by.</li>
+<li>with the culmination of optical flow and bounding box data, a logistic classifier predicts the speed of the vehicle.</li>
+<li>finally greenshield's eq, which requires the count and speeds, outputs a traffic estimate.</li>
+</ul>
 
-# Authors
+<p><br>
+<br></p>
 
-<img src="http://i.imgur.com/GEBhavj.jpg" align="center">
+<h1>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors</h1>
 
+<p><img src="http://i.imgur.com/GEBhavj.jpg" align="center"></p>
 
 <p align="center">
 Pavan Purohit (left) and Ajay Srivastava (right)
