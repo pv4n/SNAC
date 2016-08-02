@@ -11,6 +11,14 @@ data/speed_tracking_v3/frames
 data/speed_tracking_v4/frames
 data/speed_tracking_v5/frames
 
+data/1_minute_light_traffic/videos
+data/1_minute_medium_traffic/videos
+data/speed_tracking/videos
+data/speed_tracking_v2/videos
+data/speed_tracking_v3/videos
+data/speed_tracking_v4/videos
+data/speed_tracking_v5/videos
+
 .DS_Store
 .AppleDouble
 .LSOverride
