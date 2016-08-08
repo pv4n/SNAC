@@ -1,0 +1,18 @@
+1_minute_medium_traffic
+
+135 total cars in all lanes
+
+100 cars counted total
+
+_ false positives
+4 trucks
+
+100 / 135
+
+35 missed
+
+74% cars detected
+74% detection (cars + trucks)
+26% missed
+% false positive
+% false positive (with trucks)
