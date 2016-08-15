@@ -33,8 +33,8 @@ extern "C"
 #define XMAX_THRES 640
 #define YMAX_THRES 650
 
-#define START_FRAME 2600
-#define END_FRAME 4399
+#define START_FRAME 33500
+#define END_FRAME 35299
 
 #define SPEED_FILE 40
 
@@ -42,12 +42,12 @@ extern "C"
 #define RECALCULATE_FRAMES 900
 #define LANES 3
 
-#define BBOX_FILE "../data/1_minute_light_traffic/bbox_files/car.txt"
-#define RAW_FRAMES_LOCATION "../data/1_minute_light_traffic/frames/1_raw"
-#define PROCESSED_FRAMES_LOCATION "../data/1_minute_light_traffic/frames/2_yolo"
-#define COUNTED_FRAMES_LOCATION "../data/1_minute_light_traffic/frames/3_processed"
+#define BBOX_FILE "../data/1_minute_medium_traffic/bbox_files/car.txt"
+#define RAW_FRAMES_LOCATION "../data/1_minute_medium_traffic/frames/1_raw"
+#define PROCESSED_FRAMES_LOCATION "../data/1_minute_medium_traffic/frames/2_yolo"
+#define COUNTED_FRAMES_LOCATION "../data/1_minute_medium_traffic/frames/3_processed"
 
-#define LOG_FILE_NAME "../data/1_minute_light_traffic/logs/1_minute_light_traffic.txt"
+#define LOG_FILE_NAME "../data/1_minute_medium_traffic/logs/1_minute_medium_traffic.txt"
 
 using namespace cv;
 using namespace std;
@@ -173,7 +173,7 @@ int main(int argc, char** argv)
 	for (long int f=START_FRAME+1; f<END_FRAME; f++)
 	{
 		char image_file_zero[100];
-		sprintf(image_file_zero, RAW_FRAMES_LOCATION"/frame0%4ld.jpeg", f-1);
+		sprintf(image_file_zero, RAW_FRAMES_LOCATION"/frame%5ld.jpeg", f-1);
 
 		// printf("%s\n", image_file_zero);
 		Mat image_zero = imread(image_file_zero, CV_LOAD_IMAGE_COLOR);
@@ -181,6 +181,62 @@ int main(int argc, char** argv)
 
 		if(bboxes[f-START_FRAME-1].empty())
 		{
+			// printf("SKIPPED\n");
+			char image_file_processed[100];
+			char image_file_processed_new[100];
+			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
+
+			if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
+			{
+				double tc_speed = 140 - (car_count - prev_car_count) / DISTANCE / 2;
+				string tc = "-1";
+
+				if (tc_speed > 123.33)			{	tc = "A";	}
+				else if (tc_speed > 106.66) 	{	tc = "B";	}
+				else if (tc_speed > 90) 		{	tc = "C";	}
+				else if (tc_speed > 73.33) 		{	tc = "D";	}
+				else if (tc_speed > 56.66) 		{	tc = "E";	}
+				else if (tc_speed > 40) 		{	tc = "F";	}
+				else if (tc_speed > 23.33) 		{	tc = "7";	}
+				else if (tc_speed > 6.66) 		{	tc = "8";	}
+				else if (tc_speed > -10) 		{	tc = "9";	}
+				else 							{	tc = "10";}
+
+				traffic_class = "Traffic class: " + tc;
+				prev_car_count = car_count;
+			}
+
+			// traffic_class = "Traffic class: N/A";
+			current_car_speed = "Current Car Speed: N/A";
+			string depth_string = "Current Car Depth: N/A";
+
+			putText(image_processed, traffic_class, cvPoint(10, 30), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+			putText(image_processed, depth_string, cvPoint(10, 80), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+			putText(image_processed, current_car_speed, cvPoint(10, 110), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+			putText(image_processed, average_car_speed, cvPoint(10, 140), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+
+			vector<int> compression_params;
+			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+			compression_params.push_back(9);
+
+			imshow("traffic", image_processed);
+
+			try
+			{
+				// printf("WRITING IMAGE\n");
+				imwrite(image_file_processed_new, image_processed, compression_params);
+			}
+			catch (runtime_error& ex)
+			{
+				fprintf(stderr, "Exception converting image to PNG format: %s\n", ex.what());
+				return 1;
+			}
+
+			// Uncomment to wait for keypress when match is detected
+			cvWaitKey(1);
+
 			continue;
 		}
 		cv::Rect bound_box_zero(bboxes[f-START_FRAME-1][0][0],
@@ -192,12 +248,67 @@ int main(int argc, char** argv)
 		IplImage* img1 = &img1_image;
 
 		char image_file_one[100];
-		sprintf(image_file_one, RAW_FRAMES_LOCATION"/frame0%4ld.jpeg", f);
+		sprintf(image_file_one, RAW_FRAMES_LOCATION"/frame%5ld.jpeg", f);
 		// printf("%s\n", image_file_one);
 		Mat image_one = imread(image_file_one, CV_LOAD_IMAGE_COLOR);
 
 		if(bboxes[f-START_FRAME].empty())
 		{
+			// printf("SKIPPED2\n");
+			char image_file_processed[100];
+			char image_file_processed_new[100];
+			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
+
+			if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
+			{
+				double tc_speed = 140 - (car_count - prev_car_count) / DISTANCE / 2;
+				string tc = "-1";
+
+				if (tc_speed > 123.33)			{	tc = "A";	}
+				else if (tc_speed > 106.66) 	{	tc = "B";	}
+				else if (tc_speed > 90) 		{	tc = "C";	}
+				else if (tc_speed > 73.33) 		{	tc = "D";	}
+				else if (tc_speed > 56.66) 		{	tc = "E";	}
+				else if (tc_speed > 40) 		{	tc = "F";	}
+				else if (tc_speed > 23.33) 		{	tc = "7";	}
+				else if (tc_speed > 6.66) 		{	tc = "8";	}
+				else if (tc_speed > -10) 		{	tc = "9";	}
+				else 							{	tc = "10";}
+
+				traffic_class = "Traffic class: " + tc;
+				prev_car_count = car_count;
+			}
+
+			// traffic_class = "Traffic class: N/A";
+			current_car_speed = "Current Car Speed: N/A";
+			string depth_string = "Current Car Depth: N/A";
+
+			putText(image_processed, traffic_class, cvPoint(10, 30), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+			putText(image_processed, depth_string, cvPoint(10, 80), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+			putText(image_processed, current_car_speed, cvPoint(10, 110), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+			putText(image_processed, average_car_speed, cvPoint(10, 140), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+
+			vector<int> compression_params;
+			compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+			compression_params.push_back(9);
+
+			imshow("traffic", image_processed);
+
+			try
+			{
+				// printf("WRITING IMAGE\n");
+				imwrite(image_file_processed_new, image_processed, compression_params);
+			}
+			catch (runtime_error& ex)
+			{
+				fprintf(stderr, "Exception converting image to PNG format: %s\n", ex.what());
+				return 1;
+			}
+
+			// Uncomment to wait for keypress when match is detected
+			cvWaitKey(1);
 			continue;
 		}
 		cv::Rect bound_box_one(bboxes[f-START_FRAME][0][0],
@@ -285,8 +396,8 @@ int main(int argc, char** argv)
 
 				char image_file_processed[100];
 				char image_file_processed_new[100];
-				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%4ld.jpeg_p.png", f);
-				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%4ld.jpeg_p.png", f);
+				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
 				Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 				putText(image_processed, to_string(car_count), cvPoint(bboxes[f-START_FRAME][0][2], bboxes[f-START_FRAME][0][3]), FONT_HERSHEY_SIMPLEX, 2, cvScalar(0, 0, 255), 5, CV_AA);
 
@@ -464,63 +575,64 @@ int main(int argc, char** argv)
 			else
 			{
 				// printf("here?\n");
-				// if (matched_frames == MINIMUM_FRAMES)
-				// {
+				if (matched_frames == MINIMUM_FRAMES)
+				{
 					car_count--;
-					char image_file_processed[100];
-					char image_file_processed_new[100];
-					sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%4ld.jpeg_p.png", f);
-					sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%4ld.jpeg_p.png", f);
-					Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
+				}
+				char image_file_processed[100];
+				char image_file_processed_new[100];
+				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+				Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 
-					if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
-					{
-						double tc_speed = 140 - (car_count - prev_car_count) / DISTANCE / 2;
-						string tc = "-1";
+				if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
+				{
+					double tc_speed = 140 - (car_count - prev_car_count) / DISTANCE / 2;
+					string tc = "-1";
 
-						if (tc_speed > 123.33)			{	tc = "A";	}
-						else if (tc_speed > 106.66) 	{	tc = "B";	}
-						else if (tc_speed > 90) 		{	tc = "C";	}
-						else if (tc_speed > 73.33) 		{	tc = "D";	}
-						else if (tc_speed > 56.66) 		{	tc = "E";	}
-						else if (tc_speed > 40) 		{	tc = "F";	}
-						else if (tc_speed > 23.33) 		{	tc = "7";	}
-						else if (tc_speed > 6.66) 		{	tc = "8";	}
-						else if (tc_speed > -10) 		{	tc = "9";	}
-						else 							{	tc = "10";}
+					if (tc_speed > 123.33)			{	tc = "A";	}
+					else if (tc_speed > 106.66) 	{	tc = "B";	}
+					else if (tc_speed > 90) 		{	tc = "C";	}
+					else if (tc_speed > 73.33) 		{	tc = "D";	}
+					else if (tc_speed > 56.66) 		{	tc = "E";	}
+					else if (tc_speed > 40) 		{	tc = "F";	}
+					else if (tc_speed > 23.33) 		{	tc = "7";	}
+					else if (tc_speed > 6.66) 		{	tc = "8";	}
+					else if (tc_speed > -10) 		{	tc = "9";	}
+					else 							{	tc = "10";}
 
-						traffic_class = "Traffic class: " + tc;
-						prev_car_count = car_count;
-					}
+					traffic_class = "Traffic class: " + tc;
+					prev_car_count = car_count;
+				}
 
-					// traffic_class = "Traffic class: N/A";
-					current_car_speed = "Current Car Speed: N/A";
-					string depth_string = "Current Car Depth: N/A";
+				// traffic_class = "Traffic class: N/A";
+				current_car_speed = "Current Car Speed: N/A";
+				string depth_string = "Current Car Depth: N/A";
 
-					putText(image_processed, traffic_class, cvPoint(10, 30), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
-					putText(image_processed, depth_string, cvPoint(10, 80), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
-					putText(image_processed, current_car_speed, cvPoint(10, 110), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
-					putText(image_processed, average_car_speed, cvPoint(10, 140), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+				putText(image_processed, traffic_class, cvPoint(10, 30), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+				putText(image_processed, depth_string, cvPoint(10, 80), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+				putText(image_processed, current_car_speed, cvPoint(10, 110), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
+				putText(image_processed, average_car_speed, cvPoint(10, 140), FONT_HERSHEY_SIMPLEX, 1, cvScalar(0, 0, 255), 2, CV_AA);
 
-					vector<int> compression_params;
-					compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
-					compression_params.push_back(9);
+				vector<int> compression_params;
+				compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+				compression_params.push_back(9);
 
-					imshow("traffic", image_processed);
+				imshow("traffic", image_processed);
 
-					try
-					{
-						// printf("WRITING IMAGE\n");
-						imwrite(image_file_processed_new, image_processed, compression_params);
-					}
-					catch (runtime_error& ex)
-					{
-						fprintf(stderr, "Exception converting image to PNG format: %s\n", ex.what());
-						return 1;
-					}
+				try
+				{
+					// printf("WRITING IMAGE\n");
+					imwrite(image_file_processed_new, image_processed, compression_params);
+				}
+				catch (runtime_error& ex)
+				{
+					fprintf(stderr, "Exception converting image to PNG format: %s\n", ex.what());
+					return 1;
+				}
 
-					// Uncomment to wait for keypress when match is detected
-					cvWaitKey(1);
+				// Uncomment to wait for keypress when match is detected
+				cvWaitKey(1);
 				// }
 			}
 		}
@@ -528,8 +640,8 @@ int main(int argc, char** argv)
 		{
 			char image_file_processed[100];
 			char image_file_processed_new[100];
-			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%4ld.jpeg_p.png", f);
-			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%4ld.jpeg_p.png", f);
+			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
 			Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 
 			if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)

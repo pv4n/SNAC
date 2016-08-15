@@ -11,6 +11,10 @@ data/speed_tracking_v3/frames
 data/speed_tracking_v4/frames
 data/speed_tracking_v5/frames
 
+traffic/traffic
+traffic/speed
+traffic/octave-workspace
+
 .DS_Store
 .AppleDouble
 .LSOverride
