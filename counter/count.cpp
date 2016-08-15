@@ -240,7 +240,8 @@ int main(int argc, char** argv)
 				string current_car_speed = "Current Car Speed: N/A";
 
 				// % run_nn {flow} {bbox height} {center x} {center y} {depth}
-				char* octave_call[100];
+				// char* octave_call[100];
+				char* octave_call = "octave run_nn.m 7 136 225 418 43";
 				// sprintf(octave_call, "octave run_nn.m %f %f %f %f %f > class.txt", , , , )
 				int a = system(octave_call);
 				if (a == -1)
