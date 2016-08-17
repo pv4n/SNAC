@@ -33,8 +33,8 @@ extern "C"
 #define XMAX_THRES 640
 #define YMAX_THRES 650
 
-#define START_FRAME 33500
-#define END_FRAME 35299
+#define START_FRAME 2600
+#define END_FRAME 4399
 
 #define SPEED_FILE 40
 
@@ -42,12 +42,12 @@ extern "C"
 #define RECALCULATE_FRAMES 900
 #define LANES 3
 
-#define BBOX_FILE "../data/1_minute_medium_traffic/bbox_files/car.txt"
-#define RAW_FRAMES_LOCATION "../data/1_minute_medium_traffic/frames/1_raw"
-#define PROCESSED_FRAMES_LOCATION "../data/1_minute_medium_traffic/frames/2_yolo"
-#define COUNTED_FRAMES_LOCATION "../data/1_minute_medium_traffic/frames/3_processed"
+#define BBOX_FILE "../data/1_minute_light_traffic/bbox_files/car.txt"
+#define RAW_FRAMES_LOCATION "../data/1_minute_light_traffic/frames/1_raw"
+#define PROCESSED_FRAMES_LOCATION "../data/1_minute_light_traffic/frames/2_yolo"
+#define COUNTED_FRAMES_LOCATION "../data/1_minute_light_traffic/frames/3_processed"
 
-#define LOG_FILE_NAME "../data/1_minute_medium_traffic/logs/1_minute_medium_traffic.txt"
+#define LOG_FILE_NAME "../data/1_minute_light_traffic/logs/1_minute_light_traffic.txt"
 
 using namespace cv;
 using namespace std;
@@ -173,7 +173,7 @@ int main(int argc, char** argv)
 	for (long int f=START_FRAME+1; f<END_FRAME; f++)
 	{
 		char image_file_zero[100];
-		sprintf(image_file_zero, RAW_FRAMES_LOCATION"/frame%5ld.jpeg", f-1);
+		sprintf(image_file_zero, RAW_FRAMES_LOCATION"/frame0%04ld.jpeg", f-1);
 
 		// printf("%s\n", image_file_zero);
 		Mat image_zero = imread(image_file_zero, CV_LOAD_IMAGE_COLOR);
@@ -184,8 +184,8 @@ int main(int argc, char** argv)
 			// printf("SKIPPED\n");
 			char image_file_processed[100];
 			char image_file_processed_new[100];
-			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
-			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
+			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
 			Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 
 			if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
@@ -248,7 +248,7 @@ int main(int argc, char** argv)
 		IplImage* img1 = &img1_image;
 
 		char image_file_one[100];
-		sprintf(image_file_one, RAW_FRAMES_LOCATION"/frame%5ld.jpeg", f);
+		sprintf(image_file_one, RAW_FRAMES_LOCATION"/frame0%04ld.jpeg", f);
 		// printf("%s\n", image_file_one);
 		Mat image_one = imread(image_file_one, CV_LOAD_IMAGE_COLOR);
 
@@ -257,8 +257,8 @@ int main(int argc, char** argv)
 			// printf("SKIPPED2\n");
 			char image_file_processed[100];
 			char image_file_processed_new[100];
-			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
-			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
+			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
 			Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 
 			if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
@@ -396,8 +396,8 @@ int main(int argc, char** argv)
 
 				char image_file_processed[100];
 				char image_file_processed_new[100];
-				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
-				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
+				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
 				Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 				putText(image_processed, to_string(car_count), cvPoint(bboxes[f-START_FRAME][0][2], bboxes[f-START_FRAME][0][3]), FONT_HERSHEY_SIMPLEX, 2, cvScalar(0, 0, 255), 5, CV_AA);
 
@@ -581,8 +581,8 @@ int main(int argc, char** argv)
 				}
 				char image_file_processed[100];
 				char image_file_processed_new[100];
-				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
-				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+				sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
+				sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
 				Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 
 				if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
@@ -640,8 +640,8 @@ int main(int argc, char** argv)
 		{
 			char image_file_processed[100];
 			char image_file_processed_new[100];
-			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
-			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame%5ld.jpeg_p.png", f);
+			sprintf(image_file_processed, PROCESSED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
+			sprintf(image_file_processed_new, COUNTED_FRAMES_LOCATION"/frame0%04ld.jpeg_p.png", f);
 			Mat image_processed = imread(image_file_processed, CV_LOAD_IMAGE_COLOR);
 
 			if (((f - START_FRAME) % RECALCULATE_FRAMES) == 0)
