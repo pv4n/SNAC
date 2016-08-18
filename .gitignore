@@ -17,6 +17,8 @@ traffic/octave-workspace
 
 511_traffic_camera/streetcam_frames
 
+capture_data/frames
+
 .DS_Store
 .AppleDouble
 .LSOverride
