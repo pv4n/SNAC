@@ -100,7 +100,7 @@
 
 <ul>
 <li>opencv optical flow (farneback) tells us how much pixel movement occurred from frame to frame.</li>
-<li>neural network - trained yolo <a href="https://arxiv.org/pdf/1506.02640.pdf">paper</a> architecture on the 2012 VOC subset of car images. After this, we get the bounding boxes where cars are detected. </li>
+<li>neural network - trained the <a href="https://arxiv.org/pdf/1506.02640.pdf">YOLO</a> network architecture on the <a href="http://pjreddie.com/darknet/">Darknet</a> machine learning framework. 2012 VOC subset of car images. After this, we get the bounding boxes where cars are detected. </li>
 <li>bounding box metadata is enough to be able to count how many opposing cars pass by in an arbitrary time interval.</li>
 <li>with the culmination of optical flow and bounding box data, a second neural network predicts the speed of the individual vehicles.</li>
 <li>finally greenshield's eq, which requires the count and speeds, provides a level of traffic congestion.</li>
