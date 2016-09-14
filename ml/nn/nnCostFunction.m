@@ -1,6 +1,7 @@
 function [J grad] = nnCostFunction(nn_params, ...
                                    input_layer_size, ...
-                                   hidden_layer_size, ...
+                                   hidden_layer1_size, ...
+                                   hidden_layer2_size, ...
                                    num_labels, ...
                                    X, y, lambda)
                                    %nnot mine
@@ -17,11 +18,17 @@ function [J grad] = nnCostFunction(nn_params, ...
 
 % Reshape nn_params back into the parameters Theta1 and Theta2, the weight matrices
 % for our 2 layer neural network
-Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
-                 hidden_layer_size, (input_layer_size + 1));
+Theta1 = reshape(nn_params(1:hidden_layer1_size * (input_layer_size + 1)), ...
+                 hidden_layer1_size, (input_layer_size + 1));
 
-Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
-                 num_labels, (hidden_layer_size + 1));
+Theta2 = reshape(nn_params((1 + (hidden_layer1_size * (input_layer_size + 1))): ...
+                (hidden_layer1_size * (input_layer_size + 1)) + ...
+                (hidden_layer2_size * (hidden_layer1_size + 1))), ...
+                 hidden_layer2_size, (hidden_layer1_size + 1));
+                 
+Theta3 = reshape(nn_params((1 + (hidden_layer1_size * (input_layer_size + 1)) + ...
+                (hidden_layer2_size * (hidden_layer1_size + 1))):end), ...
+                 num_labels, (hidden_layer2_size + 1));
 
 % Setup some useful variables
 m = size(X, 1);
@@ -29,6 +36,7 @@ m = size(X, 1);
 J = 0;
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
+Theta3_grad = zeros(size(Theta3));
 
 %	Feedforward the neural network and return the cost in the
 %       variable J. then verify the cost function computation is correct by verifying the cost
@@ -39,7 +47,7 @@ X = [ones(m,1) X];
 
 for i = 1:m
 	X_i = X(i,:);
-	h_of_Xi = sigmoid( [1 sigmoid(X_i * Theta1')] * Theta2' );
+	h_of_Xi =  sigmoid([1 sigmoid( [1 sigmoid(X_i * Theta1')] * Theta2')] * Theta3');
 	
 	% if y = 5 then y_i = [0 0 0 0 1 0 0 0 0 0]
 	y_i = zeros(1,K);
@@ -52,7 +60,9 @@ J = 1 / m * J;
 
 % Add regularization term
 
-J = J + (lambda / (2 * m) * (sum(sumsq(Theta1(:,2:input_layer_size+1))) + sum(sumsq(Theta2(:,2:hidden_layer_size+1))))); 
+J = J + (lambda / (2 * m) * (sum(sumsq(Theta1(:,2:input_layer_size+1))) + ...
+              sum(sumsq(Theta2(:,2:hidden_layer1_size+1))) + ...
+              sum(sumsq(Theta3(:,2:hidden_layer2_size+1))))); 
 
 %
 % 	  Implement the backpropagation algorithm to compute the gradients
@@ -68,37 +78,51 @@ J = J + (lambda / (2 * m) * (sum(sumsq(Theta1(:,2:input_layer_size+1))) + sum(su
 
 delta_accum_1 = zeros(size(Theta1));
 delta_accum_2 = zeros(size(Theta2));
+delta_accum_3 = zeros(size(Theta3));
 
 for t = 1:m
-	a_1 = X(t,:);  
+	a_1 = X(t,:);  % 1 was added already up top
+  
 	z_2 = a_1 * Theta1';
-	a_2 = [1 sigmoid(z_2)];
+  a_2 = [1 sigmoid(z_2)];
+  
 	z_3 = a_2 * Theta2';
-	a_3 = sigmoid(z_3);
+  a_3 = [1 sigmoid(z_3)];
+  
+  z_4 = a_3 * Theta3';
+  a_4 = sigmoid(z_4);
+  
 	y_i = zeros(1,K);
-	y_i(y(t)) = 1;
+	y_i(y(t)) = 1;  %makes y_i binary vector for the class that is the same as the t-th element 
 	
-	delta_3 = a_3 - y_i;
-	delta_2 = delta_3 * Theta2 .* sigmoidGradient([1 z_2]);
-	
+  delta_4 = a_4 - y_i;
+  delta_3 = delta_4 * Theta3 .* sigmoidGradient([1 z_3]);
+  delta_2 = delta_3(2:end) * Theta2 .* sigmoidGradient([1 z_2]); % disregard bias unit from second hidden layer
+  
 	delta_accum_1 = delta_accum_1 + delta_2(2:end)' * a_1;
-	delta_accum_2 = delta_accum_2 + delta_3' * a_2;
+	delta_accum_2 = delta_accum_2 + delta_3(2:end)' * a_2;
+  delta_accum_3 = delta_accum_3 + delta_4' * a_3;
 end;
 
 Theta1_grad = delta_accum_1 / m;
 Theta2_grad = delta_accum_2 / m;
+Theta3_grad = delta_accum_3 / m;
 
-%	  Implement regularization with the cost function and gradients.
+%	 now regularization with the cost function and gradients.
 
-Theta1_grad(:, 2:input_layer_size+1) = Theta1_grad(:, 2:input_layer_size+1) + lambda / m * Theta1(:, 2:input_layer_size+1);
-Theta2_grad(:, 2:hidden_layer_size+1) = Theta2_grad(:, 2:hidden_layer_size+1) + lambda / m * Theta2(:, 2:hidden_layer_size+1);
+Theta1_grad(:, 2:input_layer_size+1) = Theta1_grad(:, 2:input_layer_size+1) + ...
+                  lambda / m * Theta1(:, 2:input_layer_size+1);
+Theta2_grad(:, 2:hidden_layer1_size+1) = Theta2_grad(:, 2:hidden_layer1_size+1) + ...
+                  lambda / m * Theta2(:, 2:hidden_layer1_size+1);
+Theta3_grad(:, 2:hidden_layer2_size+1) = Theta3_grad(:, 2:hidden_layer2_size+1) + ...
+                  lambda / m * Theta3(:, 2:hidden_layer2_size+1);
 
 % -------------------------------------------------------------
 
 % =========================================================================
 
 % Unroll gradients
-grad = [Theta1_grad(:) ; Theta2_grad(:)];
+grad = [Theta1_grad(:) ; Theta2_grad(:) ; Theta3_grad(:)];
 
 
 end
